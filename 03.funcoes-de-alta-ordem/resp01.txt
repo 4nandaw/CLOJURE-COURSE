@@ -1,0 +1,3 @@
+São funções que podem ser atribuidas a variáveis, armazenadas em 
+estruturas de dados, passadas como argumento ou/e retonornadas como
+valores resultantes de funções.
