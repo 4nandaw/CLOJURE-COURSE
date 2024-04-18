@@ -37,14 +37,22 @@ def show_board(board):
         if i < 2:
             print("---|---|---")
 
-def get_input(message):
-    move = input(message)
-    return str(int(move[0]) - 1) + str(int(move[1]) - 1)
+def get_input(player):
+    while True:
+        move = input(f"\nMove for player {player}: ")
+        if move.lower() == "q!":
+            print("Exiting the game...")
+            return "q!"
+        if move.strip() == "" or len(move) != 2:
+            return ""
+        return str(int(move[0]) - 1) + str(int(move[1]) - 1)
 
 def is_valid_move(board, indexes):
     return all(in_range(num, 0, 2) for num in indexes) and board[indexes[0]][indexes[1]] == "_"
 
 def validate_input(input):
+    if input == "" or len(input) != 2:
+        return False
     return len(input) == 2 and is_numeric(input)
 
 def make_move(board, player, move):
@@ -69,10 +77,17 @@ def update_scores(victory, is_draw, scores, player):
         scores["Draw"] += 1
     return scores
 
-def wanna_play(victory, is_draw):
-    if victory or is_draw:
-        return input("Wanna play another game? (y/n)\n").lower() == "y"
-    return True
+def print_winner(player):
+    print(f"\nPlayer {player} is the winner")
+    
+def print_draw():
+    print("\nNo one wins")
+    
+def print_invalid(msg):
+    print(f"Invalid {msg}\n")
+    
+def print_exit():
+    print("TYPE 'q!' TO QUIT AT ANY TIME\n")
 
 def print_scores(scores):
     print("--- Scores ---")
@@ -80,15 +95,28 @@ def print_scores(scores):
         print(f"{player}: {score}")
     print("--------------")
 
+def wanna_play(victory, is_draw):
+    if victory or is_draw:
+        while True:
+            response = input("Wanna play another game? (y/n)\n").lower()
+            if response == "y":
+                return True
+            elif response == "n":
+                return False
+            else:
+                print_invalid("input. Please enter 'y' to play again or 'n' to quit.")
+    return True
+
 def main():
     board = create_board()
     player = "X"
     scores = {"X": 0, "O": 0, "Draw": 0}
     playing = True
 
+    print_exit()
     while playing:
         show_board(board)
-        move = get_input(f"\nMove for player {player}: ")
+        move = get_input(player)
         if validate_input(move):
             indexes = get_indexes(move)
             if is_valid_move(board, indexes):
@@ -100,16 +128,18 @@ def main():
                 scores = update_scores(victory_status, is_draw, scores, player)
                 if victory_status:
                     show_board(new_board)
-                    print(f"\nPlayer {player} is the winner")
+                    print_winner(player)
                 elif is_draw:
                     show_board(new_board)
-                    print("\nNo one wins")
+                    print_draw()
                 playing = wanna_play(victory_status, is_draw)
                 player = next_player
             else:
-                print("Invalid move")
+                print_invalid("move. Try again")
+        elif move == 'q!':
+            break
         else:
-            print("Invalid input")
+            print_invalid("input")
     
     print_scores(scores)
 
