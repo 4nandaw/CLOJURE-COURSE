@@ -1,5 +1,5 @@
 def create_board():
-    return [["_" for _ in range(3)] for _ in range(3)]
+    return [[" " for _ in range(3)] for _ in range(3)]
 
 def get_indexes(move):
     return list(map(lambda x: int(x) % 10, move))
@@ -26,16 +26,18 @@ def victory(possibility, last_player):
     return all(elem == last_player for elem in possibility)
 
 def is_board_full(board):
-    return all(elem != "_" for row in board for elem in row)
+    return all(elem != " " for row in board for elem in row)
 
 def get_elem(board, indexes):
     return board[indexes[0]][indexes[1]]
 
 def show_board(board):
+    print("   ")
     for i, row in enumerate(board):
-        print(" " + " | ".join(row))
+        print("   " + " │ ".join(row))
         if i < 2:
-            print("---|---|---")
+            print("  ───┼───┼─── ")
+    print("   ")
 
 def get_input(player):
     while True:
@@ -48,7 +50,7 @@ def get_input(player):
         return str(int(move[0]) - 1) + str(int(move[1]) - 1)
 
 def is_valid_move(board, indexes):
-    return all(in_range(num, 0, 2) for num in indexes) and board[indexes[0]][indexes[1]] == "_"
+    return all(in_range(num, 0, 2) for num in indexes) and board[indexes[0]][indexes[1]] == " "
 
 def validate_input(input):
     if input == "" or len(input) != 2:
