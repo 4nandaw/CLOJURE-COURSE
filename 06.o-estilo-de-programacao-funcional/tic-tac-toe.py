@@ -139,7 +139,7 @@ def main():
             else:
                 print_invalid("move. Try again")
         elif move == 'q!':
-            break
+            playing = False
         else:
             print_invalid("input")
     
