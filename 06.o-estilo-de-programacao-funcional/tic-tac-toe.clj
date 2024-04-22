@@ -96,6 +96,9 @@
           :else (do (println "Invalid input. Please enter 'y' to play again or 'n' to quit.") (recur)))))
     true))
 
+(defn should-quit? [move]
+  (= "q!" (apply str move)))
+
 (defn -main []
   (loop [board (create-board)
          player "X"
@@ -105,6 +108,10 @@
       (do
         (show-board board)
         (let [move (vec (get-input (format "Move for player %s: " player)))]
+          (if (should-quit? move)
+            (do
+              (println "Exiting the game...")
+              (recur board player scores false))
           (if (valid-input? move)
             (let [indexes (get-indexes move)]
              (if (valid-move? board indexes)
@@ -123,7 +130,7 @@
                 (recur board player scores playing))))
             (do
               (print "Invalid input\n")
-              (recur board player scores playing)))))
+              (recur board player scores playing))))))
       (print-scores scores))))
 
 (-main)
